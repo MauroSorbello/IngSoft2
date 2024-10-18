@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Tinder de Mascotas</title>
+    <link rel="icon" type="image/x-icon" href="../../../../../../startbootstrap-one-page-wonder-gh-pages/startbootstrap-one-page-wonder-gh-pages/assets/favicon.ico" />
+    <!-- Bootstrap core CSS-->
+    <link href = "/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet" />
+    <!-- Custom styles for this templates-->
+    <link href="/css/one-page-wonder.min.css" rel="stylesheet" />
+</head>
+<body id="page-top">
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+    <div class="container px-5">
+        <a class="navbar-brand" href="/">Tinder de Mascotas</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="/logout">Salir</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- Header-->
+<header class="masthead text-center text-white" style="padding: 100px 0;">
+    <div class="masthead-content">
+        <div class="container px-2">
+            <h1 class="masthead-heading mb-0" th:text="${accion}"> Mascota</h1>
+        </div>
+    </div>
+</header>
+<!-- Content section 1-->
+<section id="scroll">
+    <div class="container px-5">
+        <div class="row gx-5 align-items-center">
+            <div class="col-lg-6 order-lg-2">
+                <div th:if="${perfil.foto != null}" class="p-5"><img class="img-fluid rounded-circle" th:src="${'/foto/mascota/' + perfil.id}" alt="" /></div>
+
+                <div th:if="${perfil.foto == null}" class="p-5"><img class="img-fluid rounded-circle" src="/img/m1.jpeg" alt="" /></div>
+            </div>
+            <div class="col-lg-6 order-lg-1">
+                <div class="p-5">
+                    <form enctype="multipart/form-data">
+                        <p th:if="${error != null}" th:text="${error}" style="color:red;"></p>
+
+                        <input type="hidden" name="id" th:value="${perfil.id}"/>
+
+                        <!-- Campo Nombre -->
+
+                        <label>Nombre de la Mascota</label>
+                        <input type="text" class="form-control" name="nombre" placeholder="nombre" th:value="${perfil.nombre}" th:disabled="${accion == 'Eliminar'}">
+
+                        <!-- Campo Foto -->
+
+                        <label>Foto</label>
+                        <input type="file" class="form-control" name="archivo" th:if="${accion != 'Eliminar'}" style="max-height: 300px;">
+
+                        <label>Tipo de Mascota</label>
+                        <select class="form-control" name="tipo">
+                            <option th:each="tipo : ${tipos}" th:value="${tipo}" th:text="${tipo}" th:selected="${perfil.tipo != null && tipo == perfil.tipo}" th:disabled="${accion == 'Eliminar'}"></option>
+                        </select>
+
+                        <label>Sexo de la Mascota</label>
+                        <select class="form-control" name="sexo">
+                            <option th:each="sexo : ${sexos}" th:value="${sexo}" th:text="${sexo}" th:selected="${perfil.sexo != null && sexo == perfil.sexo}" th:disabled="${accion == 'Eliminar'}"></option>
+                        </select>
+
+                        <!-- Botón de Enviar -->
+                        <br/>
+                        <button type="submit" class="btn btn-dark" formaction="/mascota/mis-mascotas" formmethod="GET">Volver</button>
+                        <button th:if="${accion == 'Crear'}" type="submit" class="btn btn-primary" formaction="/mascota/actualizar-perfil" formmethod="POST">Crear Mascota</button>
+                        <button th:if="${accion == 'Actualizar'}" type="submit" class="btn btn-primary" formaction="/mascota/actualizar-perfil" formmethod="POST">Actualizar Mascota</button>
+                        <button th:if="${accion == 'Eliminar'}" type="submit" class="btn btn-danger" formaction="/mascota/eliminar-perfil" formmethod="POST">Eliminar Mascota</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer-->
+<footer class="py-5 bg-black">
+    <div class="container px-5"><p class="m-0 text-center text-white small">Copyright &copy; Your Website 2023</p></div>
+</footer>
+<!-- Bootstrap core JS-->
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="/vendor/jquery/jquery.min.js"></script>
+</body>
+</html>

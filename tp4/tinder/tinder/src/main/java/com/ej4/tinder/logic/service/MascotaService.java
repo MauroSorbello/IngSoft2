@@ -4,6 +4,7 @@ import com.ej4.tinder.domain.entity.Foto;
 import com.ej4.tinder.domain.entity.Mascota;
 import com.ej4.tinder.domain.entity.Usuario;
 import com.ej4.tinder.domain.enumeration.Sexo;
+import com.ej4.tinder.domain.enumeration.Tipo;
 import com.ej4.tinder.logic.error.ErrorService;
 import com.ej4.tinder.repository.MascotaRepository;
 import jakarta.transaction.Transactional;
@@ -47,7 +48,7 @@ public class MascotaService {
     }
 
     @Transactional
-    public void agregarMascota(MultipartFile archivo, String idUsuario, String nombre, Sexo sexo) throws ErrorService {
+    public void agregarMascota(MultipartFile archivo, String idUsuario, String nombre, Sexo sexo, Tipo tipo) throws ErrorService {
         try {
             validar(nombre, sexo);
             Usuario usuario = usuarioService.buscarUsuario(idUsuario);
@@ -56,6 +57,7 @@ public class MascotaService {
             mascota.setNombre(nombre);
             mascota.setId((UUID.randomUUID().toString()));
             mascota.setSexo(sexo);
+            mascota.setTipo(tipo);
             mascota.setUsuario(usuario);
             mascota.setAlta(new Date());
 
@@ -71,7 +73,7 @@ public class MascotaService {
         }
     }
     @Transactional
-    public void modificarMascota(MultipartFile archivo, String idUsuario, String idMascota, String nombre, Sexo sexo) throws ErrorService {
+    public void modificarMascota(MultipartFile archivo, String idUsuario, String idMascota, String nombre, Sexo sexo, Tipo tipo) throws ErrorService {
         try {
             validar(nombre, sexo);
             Optional<Mascota> optional = mascotaRepository.findById(idMascota);
@@ -82,8 +84,7 @@ public class MascotaService {
                     Usuario usuario = usuarioService.buscarUsuario(idUsuario);
                     mascota.setNombre(nombre);
                     mascota.setSexo(sexo);
-                    mascota.setUsuario(usuario);
-
+                    mascota.setTipo(tipo);
                     String idFoto = null;
                     if (mascota.getFoto() != null){
                         idFoto = mascota.getFoto().getId();
@@ -151,6 +152,20 @@ public class MascotaService {
                 mascota = optional.get();
             }
             return mascota;
+        } catch (ErrorService ex) {
+            throw ex;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new ErrorService("Error de sistema");
+        }
+    }
+
+    public List<Mascota>  listarMascotasPorUsuario(String idUsuario) throws ErrorService {
+        try {
+            if (idUsuario == null || idUsuario.trim().isEmpty()) {
+                throw new ErrorService("Debe indicar el usuario");
+            }
+            return mascotaRepository.listarMascotasPorUsuario(idUsuario);
         } catch (ErrorService ex) {
             throw ex;
         } catch (Exception ex) {

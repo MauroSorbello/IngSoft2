@@ -27,41 +27,43 @@ public class FotoService {
     @Transactional
     public Foto guardar(MultipartFile archivo) throws ErrorService{
         try {
-            Foto foto = null;
+
             if (archivo != null){
-                foto = new Foto();
+                Foto foto = new Foto();
                 foto.setId((UUID.randomUUID().toString()));
                 foto.setMime(archivo.getContentType()); //Devuelve el tipo del archivo mime
                 foto.setNombre(archivo.getName());
                 foto.setContenido(archivo.getBytes()); //Pasa el contenido a un arreglo de bytes
 
                 repository.save(foto);
-
+                return foto;
             }
-            return foto;
+
         } catch (Exception e) {
             e.printStackTrace();
             throw new ErrorService("Error de Sistemas");
+
         }
+        return null;
     }
     @Transactional
     public Foto actualizar(String idFoto, MultipartFile archivo)throws ErrorService{
         try {
-            Foto foto = null;
             if (archivo != null){
                 if (idFoto != null){
                     Optional<Foto> optional = repository.findById(idFoto);
                     if (optional.isPresent()){
-                        foto = optional.get();
+                        Foto foto = optional.get();
+                        foto.setMime(archivo.getContentType()); //Devuelve el tipo del archivo mime
+                        foto.setNombre(archivo.getName());
+                        foto.setContenido(archivo.getBytes()); //Pasa el contenido a un arreglo de bytes
+
+                        repository.save(foto);
+                        return foto;
                     }
                 }
-                foto.setMime(archivo.getContentType()); //Devuelve el tipo del archivo mime
-                foto.setNombre(archivo.getName());
-                foto.setContenido(archivo.getBytes()); //Pasa el contenido a un arreglo de bytes
-
-                repository.save(foto);
             }
-            return foto;
+            return null;
         } catch (Exception e) {
             e.printStackTrace();
             throw new ErrorService("Error de Sistemas");

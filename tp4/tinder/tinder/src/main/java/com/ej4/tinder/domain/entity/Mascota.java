@@ -1,6 +1,7 @@
 package com.ej4.tinder.domain.entity;
 
 import com.ej4.tinder.domain.enumeration.Sexo;
+import com.ej4.tinder.domain.enumeration.Tipo;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,6 +18,8 @@ public class Mascota {
     private String nombre;
     @Enumerated(EnumType.STRING)
     private Sexo sexo;
+    @Enumerated(EnumType.STRING)
+    private Tipo tipo;
     @Temporal(TemporalType.TIMESTAMP)
     private Date alta;
     @Temporal(TemporalType.TIMESTAMP)

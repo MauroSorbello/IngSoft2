@@ -19,5 +19,7 @@ public class Foto {
     //Que tipo de foto es
     private String mime;
 
+    private boolean eliminado;
+
 
 }

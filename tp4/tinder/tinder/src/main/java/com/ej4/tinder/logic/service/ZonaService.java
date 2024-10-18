@@ -158,12 +158,9 @@ public class ZonaService {
 
     }
 
-    public Collection<Zona> listarZonaActiva()throws ErrorService {
-
+    public List<Zona> listarZonaActiva()throws ErrorService {
         try {
-
             return repository.findByEliminadoFalse();
-
         }catch(Exception e) {
             e.printStackTrace();
             throw new ErrorService("Error de Sistemas");

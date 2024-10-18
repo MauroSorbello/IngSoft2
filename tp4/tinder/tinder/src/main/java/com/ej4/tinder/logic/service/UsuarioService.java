@@ -8,12 +8,6 @@ import com.ej4.tinder.repository.UsuarioRepository;
 import jakarta.persistence.NoResultException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -127,7 +121,7 @@ public class UsuarioService /*implements UserDetailsService*/ {
         }
     }
 
-    public void login(String mail, String clave) throws ErrorService {
+    public Usuario login(String mail, String clave) throws ErrorService {
         try {
             if (mail == null || mail.trim().isEmpty()) {
                 throw new ErrorService("Debe indicar el usuario");
@@ -136,17 +130,19 @@ public class UsuarioService /*implements UserDetailsService*/ {
             if (clave == null || clave.trim().isEmpty()) {
                 throw new ErrorService("Debe indicar la clave");
             }
-
             Usuario usuario = null;
             try {
                 usuario = usuarioRepository.findByEmailAndClaveAndBajaIsNull(mail, clave);
+                return usuario;
             } catch (NoResultException e) {
                 throw new ErrorService("No existe un usuario para ese mail y contraseña");
+
             }
         } catch (Exception ex) {
             ex.printStackTrace();
             throw new ErrorService("Error de Sistemas");
         }
+
     }
 
     public List<Usuario> listarUsuarios() throws ErrorService {

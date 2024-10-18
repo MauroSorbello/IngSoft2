@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Tinder de Mascotas</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico" />
+    <!-- Bootstrap core CSS-->
+    <link href = "/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800,900" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Lato:100,100i,300,300i,400,400i,700,700i,900,900i" rel="stylesheet" />
+    <!-- Custom styles for this templates-->
+    <link href="/css/one-page-wonder.min.css" rel="stylesheet" />
+</head>
+<body id="page-top">
+<!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+    <div class="container px-5">
+        <a class="navbar-brand" href="/">Tinder de Mascotas</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="/logout">Salir</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- Header-->
+<header class="masthead text-center text-white" style="padding: 80px;">
+    <h1 class="masthead-heading mb-0"> Mis Mascotas</h1>
+</header>
+<!-- Content section 1-->
+<section id="scroll">
+    <div class="container px-5">
+        <div class="row gx-5 align-items-center">
+            <div class="col-lg-12 order-lg-12">
+                <br>
+                <a th:href="@{/mascota/editar-perfil}" class="btn btn-primary btn-l rounded-pill mt-5" style="float:right; margin-bottom:7px; padding: 10px">¡Agrega una Mascota!</a>
+                <br/>
+                <table class="table table-light table-hover table-bordered">
+                    <thead>
+                        <tr class="bg-dark text-white">
+                            <th>Foto</th>
+                            <th>Nombre</th>
+                            <th>Sexo</th>
+                            <th>Tipo</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="mascota : ${mascotas}" class="bg-light">
+                            <td>
+                                <img th:if="${mascota.foto != null}" th:src="${'/foto/mascota/' + mascota.id}" alt="" style="max-height: 60px; border-radius: 100%">
+                                <img th:if="${mascota.foto == null}" src="/img/m1.jpeg" alt="" style="max-height: 60px; border-radius: 100%">
+                            </td>
+                            <td th:text="${mascota.nombre}"></td>
+                            <td th:text="${mascota.sexo}"></td>
+                            <td th:text="${mascota.tipo}"></td>
+                            <td>
+                                <a th:href="@{/mascota/editar-perfil(id=${mascota.id},accion=Actualizar)}">Editar</a> -
+                                <a th:href="@{/mascota/editar-perfil(id=${mascota.id},accion=Eliminar)}">Eliminar</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer-->
+<footer class="py-5 bg-black">
+    <div class="container px-5"><p class="m-0 text-center text-white small">Copyright &copy; Your Website 2023</p></div>
+</footer>
+<!-- Bootstrap core JS-->
+<script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<!-- Core theme JS-->
+<script src="/vendor/jquery/jquery.min.js"></script>
+</body>
+</html>
