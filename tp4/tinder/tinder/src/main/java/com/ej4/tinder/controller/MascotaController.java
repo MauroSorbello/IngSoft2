@@ -74,18 +74,16 @@ public class MascotaController {
     public String actualizar(HttpSession session, ModelMap modelo, MultipartFile archivo, @RequestParam String id, @RequestParam String nombre, @RequestParam Sexo sexo, @RequestParam Tipo tipo){
         Usuario usuario = (Usuario) session.getAttribute("usuariosession");
         if (usuario == null) {
-            return "redirect:/mascota/mis-mascotas";
+            return "redirect:/login";
         }
         try {
-            System.out.println("-------------------------------------------------");
-            System.out.println(archivo);
 
             if (id.equals("")) {
                 mascotaService.agregarMascota(archivo,usuario.getId(), nombre, sexo, tipo);
             }else {
                 mascotaService.modificarMascota(archivo,usuario.getId(), id, nombre,sexo, tipo);
             }
-            return "redirect:/inicio";
+            return "redirect:/mascota/mis-mascotas";
         }catch (ErrorService ex){
             Mascota mascota = new Mascota();
             mascota.setId(id);
