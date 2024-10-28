@@ -34,23 +34,23 @@ public class UsuarioService {
        try { 
     	   
     	
-        if (nombre == null || nombre.trim().isEmpty()) {
+        if (nombre == null || nombre.isEmpty()) {
             throw new ErrorServiceException("Debe indicar el nombre");
         }
         
-        if (email == null || email.trim().isEmpty()) {
+        if (email == null || email.isEmpty()) {
             throw new ErrorServiceException("Debe indicar el Email");
         }
         
-        if (clave == null || clave.trim().isEmpty()) {
+        if (clave == null || clave.isEmpty()) {
             throw new ErrorServiceException("Debe indicar la clave");
         }
         
-        if (confirmacion == null || confirmacion.trim().isEmpty()) {
+        if (confirmacion == null || confirmacion.isEmpty()) {
             throw new ErrorServiceException("Debe indicar la confirmación de clave");
         }
         
-        if (!clave.trim().equals(confirmacion.trim())) {
+        if (!clave.equals(confirmacion)) {
             throw new ErrorServiceException("La clave debe ser igual a su confirmación");
         }
         
@@ -62,12 +62,12 @@ public class UsuarioService {
 	  }  
 
     }
-    
+
     @Transactional
     public Usuario crearUsuario(String nombre, String email, String clave, String confirmacion, MultipartFile archivo) throws ErrorServiceException {
 
-      try {	
-    	  
+      try {
+        System.out.println(nombre);
         validar(nombre, email, clave, confirmacion);
         
         Usuario usuario = new Usuario();
@@ -85,12 +85,46 @@ public class UsuarioService {
         
         return repository.save(usuario);
         
-      }catch(ErrorServiceException e) {  
+      }catch(ErrorServiceException e) {
+          System.out.println("el error sale de aca");
+          e.printStackTrace();
 		   throw e;  
 	  }catch(Exception e) {
-		   e.printStackTrace();
+          System.out.println("el error sale de aca 2");
+
 		   throw new ErrorServiceException("Error de Sistemas");
 	  } 
+    }
+
+    public Usuario crearUsuarioAuth(String nombre, String email) throws ErrorServiceException {
+
+        try {
+            System.out.println(nombre);
+            if (nombre == null || nombre.isEmpty()) {
+                throw new ErrorServiceException("Debe indicar el nombre");
+            }
+
+            if (email == null || email.isEmpty()) {
+                throw new ErrorServiceException("Debe indicar el Email");
+            }
+
+            Usuario usuario = new Usuario();
+            usuario.setId(UUID.randomUUID().toString());
+            usuario.setNombre(nombre);
+            usuario.setEmail(email);
+            usuario.setRol(Rol.USER);
+            usuario.setEliminado(false);
+            return repository.save(usuario);
+
+        }catch(ErrorServiceException e) {
+            System.out.println("el error sale de aca");
+            e.printStackTrace();
+            throw e;
+        }catch(Exception e) {
+            System.out.println("el error sale de aca 2");
+
+            throw new ErrorServiceException("Error de Sistemas");
+        }
     }
 
     @Transactional
@@ -98,7 +132,7 @@ public class UsuarioService {
 
     	try {
     		
-    		validar(nombre, email, clave, confirmacion);
+    		//validar(nombre, email, clave, confirmacion);
     		
             Usuario usuario = buscarUsuario(idUsuario);
             usuario.setNombre(nombre);
@@ -218,6 +252,7 @@ public class UsuarioService {
     	try {	
     		
     		if (nombre == null || nombre.trim().isEmpty()) {
+                System.out.println("Por aca");
                 throw new ErrorServiceException("Debe indicar el nombre");
             }
     		

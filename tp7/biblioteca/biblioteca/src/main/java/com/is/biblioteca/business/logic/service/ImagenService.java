@@ -25,7 +25,7 @@ public class ImagenService {
         try {		
       	  
           if(archivo == null || archivo.isEmpty()){
-              throw new ErrorServiceException("Debe indicar el nombre");
+              throw new ErrorServiceException("Debe indicar el archivo");
           }
           
         } catch (ErrorServiceException e) {

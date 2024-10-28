@@ -52,31 +52,16 @@
 			</div>
 		</div>
 
-		<form class="formulario" th:action="@{/usuario/inicio}" method="POST">
-
-
-			<div class="form-group my-3">
-				<h3 class="card-title">Accede a la Biblioteca!</h3>
-			</div>
-
-			<div class="form-group my-3">
-				<input type="email" class="form-control" name="email" placeholder="EMAIL">
-			</div>
-
-			<div class="form-group my-3">
-				<input type="password" class="form-control" name="password" placeholder="CONTRASEÑA">
-			</div>
-
-
-			<button type="submit" class="btn btn-primary mt-3 botones">Ingresar!</button>
-			
-		</form>
-
-
-		<section class=" text-center container">
-			<div class="row mt-3">
-				<div class="divVolver">
-					<a th:href="@{/}" class="btn btn-secondary my-2 botonVolver botones">Volver</a>
+		<section class="text-center container">
+			<div class="row mt-3 justify-content-center">
+				<div class="col-12">
+					<h3 class="card-title mb-4">Accede a la Biblioteca!</h3>
+				</div>
+				<div class="col-12 mb-3">
+					<a href="/oauth2/authorization/auth0" class="btn btn-primary mt-3 botones ">Iniciar Sesión con Google</a>
+				</div>
+				<div class="col-12">
+					<a th:href="@{/}" class="btn btn-secondary my-2 botonVolver botones" style="width: 10%;">Volver</a>
 				</div>
 			</div>
 		</section>

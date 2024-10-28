@@ -1,6 +1,9 @@
 package com.is.biblioteca.controller.view;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,38 +39,46 @@ public class UsuarioController {
 			modelo.put("error", "Usuario o Contraseña invalidos!");
 		}
 
-		return "login.html";
+		return "/login";
 	}
 
-	@PostMapping("/inicio")
-	public String inicio(@RequestParam(value = "email") String email, @RequestParam(value = "password") String clave,
-			HttpSession session, ModelMap modelo) {
+	@GetMapping("/inicio")
+	public String inicio(@AuthenticationPrincipal OidcUser principal, HttpSession session, ModelMap modelo) {
 
 		try {
-
-			Usuario usuario = usuarioService.login(email, clave);
-			session.setAttribute("usuariosession", usuario);
-
-			if (usuario.getRol().toString().equals("ADMIN")) {
-				return "redirect:/admin/dashboard";
+			// Verificar si el usuario está autenticado con Auth0
+			if (principal != null) {
+				String nombre = principal.getClaims().get("name").toString();
+				String email = principal.getClaims().get("email").toString();
+				Usuario usuario = usuarioService.buscarUsuarioPorEmail(email);
+				if (usuario == null) {
+					usuario = usuarioService.crearUsuarioAuth(nombre, email);
+				}
+				session.setAttribute("usuariosession", usuario);
+				if (usuario.getRol().toString().equals("ADMIN")) {
+					return "redirect:/admin/dashboard";
+				}
 			}
 
-			return "inicio.html";
+			return "/inicio";
 
 		} catch (ErrorServiceException ex) {
+			ex.printStackTrace();
 			modelo.put("error", ex.getMessage());
-			return "login.html";
+			return "/login";
 		} catch (Exception e) {
 			e.printStackTrace();
 			modelo.put("error", e.getMessage());
-			return "login.html";
+			return "/login";
 		}
 	}
 
 	@GetMapping("/logout")
-	public String salir(HttpSession session) {
+	public String salir(HttpSession session, HttpServletRequest request) {
 		session.setAttribute("usuariosession", null);
-		return "index.html";
+		// Invalida la sesión local
+		request.getSession().invalidate();
+		return "redirect:/";
 	}
 
 	//////////////////////////////////////////
@@ -78,30 +89,26 @@ public class UsuarioController {
 
 	@GetMapping("/registrar")
 	public String irEditAlta() {
-		return "registro.html";
+		return "/registro";
 	}
 
-	@PostMapping("/registro")
-	public String aceptarEditAlta(@RequestParam String nombre, @RequestParam String email,
-			@RequestParam String password, String password2, ModelMap modelo, MultipartFile archivo) {
+	@PostMapping("/registrando")
+	public String aceptarEditAlta(@RequestParam String nombre, @RequestParam String email, @RequestParam String password, String password2, ModelMap modelo, MultipartFile archivo) {
 
 		try {
-
+			System.out.println(nombre);
 			usuarioService.crearUsuario(nombre, email, password, password2, archivo);
 
-			modelo.put("exito", "Usuario registrado correctamente!");
-
-			return "index.html";
-
 		} catch (ErrorServiceException ex) {
-
+			System.out.println(ex.getMessage());
 			modelo.put("error", ex.getMessage());
 			modelo.put("nombre", nombre);
 			modelo.put("email", email);
 
-			return "registro.html";
+			return "/registro";
 		}
-
+		modelo.put("exito", "Usuario registrado correctamente!");
+		return "/index";
 	}
 
 	//////////////////////////////////////////
